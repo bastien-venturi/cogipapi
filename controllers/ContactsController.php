@@ -35,11 +35,14 @@ class ContactsController {
             $contact = $this->model->getContactById($id); // Correction ici
             header('Content-Type: application/json');
             if ($contact) { // Correction ici
-                echo json_encode($contact); // Correction ici
+                http_response_code(200);
+                echo json_encode([
+                    'status' => 200, 
+                    'data' => $contact], JSON_PRETTY_PRINT);
             } else {
                 http_response_code(404);
                 echo json_encode([
-                    'status' => 404,
+                    'status' => 404, 
                     'message' => 'Contact not found']);
             }
         } catch (Exception $e) {
@@ -50,9 +53,9 @@ class ContactsController {
     public function createContact($data) {
         $errorModel = new ErrorModel();
         try {
-            if (!isset($data['contact_name']) || !is_string($data['contact_name'])) {
+            if (!isset($data['name']) || !is_string($data['name'])) {
                 http_response_code(400);
-                echo json_encode(['message' => 'contact_name']);
+                echo json_encode(['message' => 'Invalid or missing name']);
                 return;
             }
             $ContactId = $this->model->createContacts($data);
@@ -65,19 +68,12 @@ class ContactsController {
         } catch (Exception $e) {
             $errorModel->logError($e);
             $errorModel->sendErrorResponse($e);
-
         }
     }
+    
     public function updateContact($id, $data) {
         $errorModel = new ErrorModel();
         try {
-            if (!isset($data['contact_name']) || !is_string($data['contact_name'])) {
-                http_response_code(400);
-                echo json_encode([
-                    'status' => 400,
-                    'message' => 'Invalid contact_name']);
-                return;
-            }
             $result = $this->model->updateContact($id, $data);
             header('Content-Type: application/json');
             if ($result) {
@@ -88,11 +84,11 @@ class ContactsController {
                 http_response_code(404);
                 echo json_encode([
                     'status' => 404,
-                    'message' => 'Contact not found or no changes made']);
+                    'message' => 'Contact not found']);
             }
         } catch (Exception $e) {
             $errorModel->logError($e);
-            $errorModel->sendNotFoundResponse($e);
+            $errorModel->sendErrorResponse($e);
         }
     }
     public function deleteContact($id) {
