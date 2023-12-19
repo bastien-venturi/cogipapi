@@ -7,8 +7,8 @@ require 'vendor/autoload.php';
 
 //LOCAL CONNECTION//
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+// $dotenv->load();
 
 // $host = $_ENV['DB_HOST'];
 // $db   = $_ENV['DB_DATABASE'];
